@@ -348,15 +348,100 @@ WPS请求生成器主要由一个列出所有可用进程的选择框和两个�
 }
 ```
 
+3、生成具有地理标定的单元格规则网格
+
+<img src="C:\Users\乔勇\AppData\Roaming\Typora\typora-user-images\image-20200820155710706.png" alt="image-20200820155710706" style="zoom: 67%;" />
 
 
 
+<img src="C:\Users\乔勇\AppData\Roaming\Typora\typora-user-images\image-20200820155747972.png" alt="image-20200820155747972" style="zoom: 67%;" />
 
+```
+<?xml version="1.0" encoding="UTF-8"?><wps:Execute version="1.0.0" service="WPS" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.opengis.net/wps/1.0.0" xmlns:wfs="http://www.opengis.net/wfs" xmlns:wps="http://www.opengis.net/wps/1.0.0" xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:gml="http://www.opengis.net/gml" xmlns:ogc="http://www.opengis.net/ogc" xmlns:wcs="http://www.opengis.net/wcs/1.1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xsi:schemaLocation="http://www.opengis.net/wps/1.0.0 http://schemas.opengis.net/wps/1.0.0/wpsAll.xsd">
+  <ows:Identifier>gs:Grid</ows:Identifier>
+  <wps:DataInputs>
+    <wps:Input>
+      <ows:Identifier>bounds</ows:Identifier>
+      <wps:Data>
+        <wps:BoundingBoxData crs="EPSG:4326" dimensions="2">
+          <ows:LowerCorner>0.0 0.0</ows:LowerCorner>
+          <ows:UpperCorner>200.0 200.0</ows:UpperCorner>
+        </wps:BoundingBoxData>
+      </wps:Data>
+    </wps:Input>
+    <wps:Input>
+      <ows:Identifier>width</ows:Identifier>
+      <wps:Data>
+        <wps:LiteralData>20</wps:LiteralData>
+      </wps:Data>
+    </wps:Input>
+    <wps:Input>
+      <ows:Identifier>height</ows:Identifier>
+      <wps:Data>
+        <wps:LiteralData>20</wps:LiteralData>
+      </wps:Data>
+    </wps:Input>
+    <wps:Input>
+      <ows:Identifier>vertexSpacing</ows:Identifier>
+      <wps:Data>
+        <wps:LiteralData>5</wps:LiteralData>
+      </wps:Data>
+    </wps:Input>
+    <wps:Input>
+      <ows:Identifier>mode</ows:Identifier>
+      <wps:Data>
+        <wps:LiteralData>Rectangular</wps:LiteralData>
+      </wps:Data>
+    </wps:Input>
+  </wps:DataInputs>
+  <wps:ResponseForm>
+    <wps:RawDataOutput mimeType="application/json">
+      <ows:Identifier>result</ows:Identifier>
+    </wps:RawDataOutput>
+  </wps:ResponseForm>
+</wps:Execute>
+```
 
+postman模拟结果
 
-
-
-
+```
+{
+            "type": "Feature",
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                    [
+                        [
+                            0,
+                            0
+                        ],
+                        [
+                            0,
+                            20
+                        ],
+                        [
+                            20,
+                            20
+                        ],
+                        [
+                            20,
+                            0
+                        ],
+                        [
+                            0,
+                            0
+                        ]
+                    ]
+                ]
+            },
+            "properties": {
+                "id": 0,
+                "centerX": 10,
+                "centerY": 10
+            },
+            "id": "grid.0"
+        }
+```
 
 
 
