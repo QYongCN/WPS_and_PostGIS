@@ -1,5 +1,3 @@
-## WPS演示
-
 ### wps请求构造器
 
 geoserver wps扩展包含一个请求生成器，用于通过Web管理界面。该工具还可以用于演示流程，并构建自己的示例。
@@ -208,240 +206,41 @@ WPS请求生成器主要由一个列出所有可用进程的选择框和两个�
 - vec:VectorToRaster  使用属性指定单元格值，将部分或全部特性集合转换为栅格网格
 - vec:VectorZonaStatics 计算给定属性在一组多边形区域中的分布统计信息。输入必须是点
 
-### WPS试用
-
-#### 1、确定toop:states边界
-
-<img src="C:\Users\乔勇\AppData\Roaming\Typora\typora-user-images\image-20200819160610702.png" alt="image-20200819160610702" style="zoom: 67%;" />
+### 
 
 
 
 
 
-<img src="C:\Users\乔勇\AppData\Roaming\Typora\typora-user-images\image-20200819160645687.png" alt="image-20200819160645687" style="zoom:50%;" />
 
 
 
-```
-<?xml version="1.0" encoding="UTF-8"?><wps:Execute version="1.0.0" service="WPS" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.opengis.net/wps/1.0.0" xmlns:wfs="http://www.opengis.net/wfs" xmlns:wps="http://www.opengis.net/wps/1.0.0" xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:gml="http://www.opengis.net/gml" xmlns:ogc="http://www.opengis.net/ogc" xmlns:wcs="http://www.opengis.net/wcs/1.1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xsi:schemaLocation="http://www.opengis.net/wps/1.0.0 http://schemas.opengis.net/wps/1.0.0/wpsAll.xsd">
-  <ows:Identifier>gs:Bounds</ows:Identifier>
-  <wps:DataInputs>
-    <wps:Input>
-      <ows:Identifier>features</ows:Identifier>
-      <wps:Reference mimeType="text/xml" xlink:href="http://geoserver/wfs" method="POST">
-        <wps:Body>
-          <wfs:GetFeature service="WFS" version="1.0.0" outputFormat="GML2" xmlns:topp="http://www.openplans.org/topp">
-            <wfs:Query typeName="topp:states"/>
-          </wfs:GetFeature>
-        </wps:Body>
-      </wps:Reference>
-    </wps:Input>
-  </wps:DataInputs>
-  <wps:ResponseForm>
-    <wps:RawDataOutput>
-      <ows:Identifier>bounds</ows:Identifier>
-    </wps:RawDataOutput>
-  </wps:ResponseForm>
-</wps:Execute>
-```
-
-使用postman模拟结果
-
-```
-<?xml version="1.0" encoding="UTF-8"?>
-<ows:BoundingBox xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ows="http://www.opengis.net/ows/1.1" crs="EPSG:4326">
-    <ows:LowerCorner>-124.73142200000001 24.955967</ows:LowerCorner>
-    <ows:UpperCorner>-66.969849 49.371735</ows:UpperCorner>
-</ows:BoundingBox>
-```
-
-2、重新投影Geoserver上的图层
-
-<img src="C:\Users\乔勇\AppData\Roaming\Typora\typora-user-images\image-20200819161543829.png" alt="image-20200819161543829" style="zoom: 67%;" />
 
 
 
-![image-20200819161625284](C:\Users\乔勇\AppData\Roaming\Typora\typora-user-images\image-20200819161625284.png)
-
-```
-<?xml version="1.0" encoding="UTF-8"?><wps:Execute version="1.0.0" service="WPS" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.opengis.net/wps/1.0.0" xmlns:wfs="http://www.opengis.net/wfs" xmlns:wps="http://www.opengis.net/wps/1.0.0" xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:gml="http://www.opengis.net/gml" xmlns:ogc="http://www.opengis.net/ogc" xmlns:wcs="http://www.opengis.net/wcs/1.1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xsi:schemaLocation="http://www.opengis.net/wps/1.0.0 http://schemas.opengis.net/wps/1.0.0/wpsAll.xsd">
-  <ows:Identifier>vec:Reproject</ows:Identifier>
-  <wps:DataInputs>
-    <wps:Input>
-      <ows:Identifier>features</ows:Identifier>
-      <wps:Reference mimeType="text/xml" xlink:href="http://geoserver/wfs" method="POST">
-        <wps:Body>
-          <wfs:GetFeature service="WFS" version="1.0.0" outputFormat="GML2" xmlns:tiger="http://www.census.gov">
-            <wfs:Query typeName="tiger:giant_polygon"/>
-          </wfs:GetFeature>
-        </wps:Body>
-      </wps:Reference>
-    </wps:Input>
-    <wps:Input>
-      <ows:Identifier>forcedCRS</ows:Identifier>
-      <wps:Data>
-        <wps:LiteralData>EPSG:4326</wps:LiteralData>
-      </wps:Data>
-    </wps:Input>
-    <wps:Input>
-      <ows:Identifier>targetCRS</ows:Identifier>
-      <wps:Data>
-        <wps:LiteralData>EPSG:2326</wps:LiteralData>
-      </wps:Data>
-    </wps:Input>
-  </wps:DataInputs>
-  <wps:ResponseForm>
-    <wps:RawDataOutput mimeType="application/json">
-      <ows:Identifier>result</ows:Identifier>
-    </wps:RawDataOutput>
-  </wps:ResponseForm>
-</wps:Execute>
-```
-
-使用postman模拟结果
-
-```
-{
-    "type": "FeatureCollection",
-    "crs": {
-        "type": "name",
-        "properties": {
-            "name": "EPSG:2326"
-        }
-    },
-    "features": [
-        {
-            "type": "Feature",
-            "geometry": {
-                "type": "MultiPolygon",
-                "coordinates": [
-                    [
-                        [
-                            [
-                                836496.1844,
-                                -11651401.7382
-                            ],
-                            [
-                                836368.3267,
-                                8352802.7341
-                            ],
-                            [
-                                836368.3267,
-                                8352802.7341
-                            ],
-                            [
-                                836496.1844,
-                                -11651401.7382
-                            ],
-                            [
-                                836496.1844,
-                                -11651401.7382
-                            ]
-                        ]
-                    ]
-                ]
-            },
-            "properties": {},
-            "id": "giant_polygon.1"
-        }
-    ]
-}
-```
-
-3、生成具有地理标定的单元格规则网格
-
-<img src="C:\Users\乔勇\AppData\Roaming\Typora\typora-user-images\image-20200820155710706.png" alt="image-20200820155710706" style="zoom: 67%;" />
 
 
 
-<img src="C:\Users\乔勇\AppData\Roaming\Typora\typora-user-images\image-20200820155747972.png" alt="image-20200820155747972" style="zoom: 67%;" />
 
-```
-<?xml version="1.0" encoding="UTF-8"?><wps:Execute version="1.0.0" service="WPS" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.opengis.net/wps/1.0.0" xmlns:wfs="http://www.opengis.net/wfs" xmlns:wps="http://www.opengis.net/wps/1.0.0" xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:gml="http://www.opengis.net/gml" xmlns:ogc="http://www.opengis.net/ogc" xmlns:wcs="http://www.opengis.net/wcs/1.1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xsi:schemaLocation="http://www.opengis.net/wps/1.0.0 http://schemas.opengis.net/wps/1.0.0/wpsAll.xsd">
-  <ows:Identifier>gs:Grid</ows:Identifier>
-  <wps:DataInputs>
-    <wps:Input>
-      <ows:Identifier>bounds</ows:Identifier>
-      <wps:Data>
-        <wps:BoundingBoxData crs="EPSG:4326" dimensions="2">
-          <ows:LowerCorner>0.0 0.0</ows:LowerCorner>
-          <ows:UpperCorner>200.0 200.0</ows:UpperCorner>
-        </wps:BoundingBoxData>
-      </wps:Data>
-    </wps:Input>
-    <wps:Input>
-      <ows:Identifier>width</ows:Identifier>
-      <wps:Data>
-        <wps:LiteralData>20</wps:LiteralData>
-      </wps:Data>
-    </wps:Input>
-    <wps:Input>
-      <ows:Identifier>height</ows:Identifier>
-      <wps:Data>
-        <wps:LiteralData>20</wps:LiteralData>
-      </wps:Data>
-    </wps:Input>
-    <wps:Input>
-      <ows:Identifier>vertexSpacing</ows:Identifier>
-      <wps:Data>
-        <wps:LiteralData>5</wps:LiteralData>
-      </wps:Data>
-    </wps:Input>
-    <wps:Input>
-      <ows:Identifier>mode</ows:Identifier>
-      <wps:Data>
-        <wps:LiteralData>Rectangular</wps:LiteralData>
-      </wps:Data>
-    </wps:Input>
-  </wps:DataInputs>
-  <wps:ResponseForm>
-    <wps:RawDataOutput mimeType="application/json">
-      <ows:Identifier>result</ows:Identifier>
-    </wps:RawDataOutput>
-  </wps:ResponseForm>
-</wps:Execute>
-```
 
-postman模拟结果
 
-```
-{
-            "type": "Feature",
-            "geometry": {
-                "type": "Polygon",
-                "coordinates": [
-                    [
-                        [
-                            0,
-                            0
-                        ],
-                        [
-                            0,
-                            20
-                        ],
-                        [
-                            20,
-                            20
-                        ],
-                        [
-                            20,
-                            0
-                        ],
-                        [
-                            0,
-                            0
-                        ]
-                    ]
-                ]
-            },
-            "properties": {
-                "id": 0,
-                "centerX": 10,
-                "centerY": 10
-            },
-            "id": "grid.0"
-        }
-```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
